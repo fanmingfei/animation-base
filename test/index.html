@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="../main.js"></script>
+    <script src="../easing.js"></script>
+    <script>
+    function move(box, value) {
+        box.style.transform = `translateX(${value}px)`
+    }
+    </script>
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    .grid {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .box {
+        width: 100px;
+        height: 100px;
+        background: red;
+    }
+
+    button {
+        padding: 10px;
+        position: fixed;
+        right: 40px;
+        top: 100px;
+        background: black;
+        color: #fff;
+        outline: none;
+    }
+    </style>
+</head>
+
+<body>
+    <button onclick="play()">
+        Click Here to Test
+    </button>
+    <div class="list">
+    </div>
+    <script>
+    function getDomString(easing) {
+        return `
+        <div class="grid">
+            <div class="code">
+            ${easing}
+                <pre><code>animate(0, 300, 1000, move, EasingFunctions.${easing})</code></pre>
+            </div>
+            <div class="demo">
+                <div class="box" id="${easing}Box">
+                </div>
+            </div>
+        </div>
+        `
+    }
+
+    function doMove(easing) {
+        animate(0, 300, 1000, move.bind(null, document.querySelector(`#${easing}Box`)), EasingFunctions[easing])
+    }
+    let string = ''
+    Object.keys(EasingFunctions).forEach(easing => {
+        string += getDomString(easing)
+    })
+
+    document.querySelector('.list').innerHTML = string
+
+    function play() {
+        Object.keys(EasingFunctions).forEach(easing => {
+            doMove(easing)
+        })
+    }
+    </script>
+    <script>
+    document.addEventListener('click', () => {
+        play()
+    })
+    document.querySelector('button').animate && document.querySelector('button').animate([
+        // keyframes
+        { transform: 'scale(0.8)' },
+        { transform: 'scale(1.2)' },
+        { transform: 'scale(0.8)' }
+    ], {
+        // timing options
+        duration: 2000,
+        iterations: Infinity
+    });
+    </script>
+</body>
+
+</html>
